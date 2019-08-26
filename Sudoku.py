@@ -1,3 +1,7 @@
+# Copyright (C) 2019 Daniel Opdahl (dopdahl16@gmail.com) Some Rights Reserved. 
+# Permission to copy and modify is granted under the GNU General Public License v3.0 license
+# Last revised 8/26/2019
+
 def reduce(matrix, groups):
     changed = True
     while changed:
@@ -53,7 +57,6 @@ def reduceGroup(group):
 def reduceGroup(group):
     changed = False
 
-    ###This is Harison Greene's work###
     '''
     #Rule 1
     for index in range(9):
@@ -85,7 +88,6 @@ def reduceGroup(group):
             group[i] = set(copyIndex)
             changed = True
 
-            ###End of Harison Greene's Work###
             '''
     for set1 in group:
         if len(set1) == 1:
