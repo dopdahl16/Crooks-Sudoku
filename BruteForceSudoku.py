@@ -1,3 +1,7 @@
+# Copyright (C) 2019 Daniel Opdahl (dopdahl16@gmail.com) Some Rights Reserved. 
+# Permission to copy and modify is granted under the GNU General Public License v3.0 license
+# Last revised 8/26/2019
+
 import copy
 import sys
 import time
