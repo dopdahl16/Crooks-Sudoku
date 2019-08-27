@@ -251,27 +251,6 @@ def openPuzzle():
     matrix = matrix.split()
     return matrix
 
-#def forceBoxes(matrix):
-    #initial_numbers_present = {}
-    #sorted_numbers_present = {}
-    #for cell in matrix.getCells():
-        #if cell.getVal() != 'x':
-            #if cell.getVal() in initial_numbers_present:
-                #initial_numbers_present[cell.getVal()] = initial_numbers_present[cell.getVal()] + 1
-            #else:
-                #initial_numbers_present[cell.getVal()] = 1
-    #for key, value in sorted(initial_numbers_present.items(), key=lambda item: item[1], reverse=True):
-        #sorted_numbers_present[key] = value
-    #print(sorted_numbers_present)
-    #for appearing_value in sorted_numbers_present.keys():
-        #appearances = sorted_numbers_present.pop(appearing_value)
-        #print(appearing_value, appearances)
-    #print(sorted_numbers_present.pop())
-    #for box in range(1,10,1):
-        #print(box)
-    #print(matrix)
-
-
 
 puzzle = openPuzzle()
 #print(puzzle)
@@ -282,8 +261,6 @@ my_matrix.setCells(ordered_cell_list)
 #print(str(my_matrix))
 
 # If I were staying absolutely true to Crook's algorithm, I would call a function here called forceBoxes. This initial step is described on page 463 in his paper. The specific paragraph in which he describes this step beings, "One should always begin the solution of a Sudoku puzzle by looking for cells within boxes to enter numbers within that box that are missing." While on actual pen and paper, this may be the more efficient manner of doing things, I believe that doing this initial step in a computer algorithm can be better accomplished by first marking up the entire matrix, then doing an initial "hunt" for boxes that can be forced. This is the approach I go with in my algorithm.
-
-#forceBoxes(my_matrix)
 
 my_matrix.markup()
 my_matrix.reduceMarkup()
