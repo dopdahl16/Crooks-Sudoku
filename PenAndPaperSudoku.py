@@ -35,8 +35,10 @@ class Cell:
 
 # Since I have the coordinates baked into each Cell oject, maybe I should subclass Matrix as a set... Faster lookups? The order that the list provides doesn't really matter...
 class Matrix(list):
+    
     def __init__(self, cells_list=[]):
         self.cells = cells_list
+        
     def setCells(self, cells_list):
         
         # The commented code below type checks the inputted cells_list, but I've opted not to employ it. It feels more "Pythonic" 
@@ -50,36 +52,42 @@ class Matrix(list):
         '''
         
         self.cells = cells_list
+        
     def getCells(self):
         return self.cells
+    
     def getColumnGroup(self, column_number):
         column_group = []
-        for cell in self.cells:
+        for cell in self.getCells():
             if cell.getCol() == column_number:
                 column_group.append(cell)
         if len(column_group) != 9:
             raise BaseException("Something broke. Contact a developer ASAP!")
         return column_group
+    
     def getRowGroup(self, row_number):
         row_group = []
-        for cell in self.cells:
+        for cell in self.getCells():
             if cell.getRow() == row_number:
                 row_group.append(cell)
         if len(row_group) != 9:
             raise BaseException("Something broke. Contact a developer ASAP!")
         return row_group
+    
     def getBoxGroup(self, box_number):
         box_group = []
-        for cell in self.cells:
+        for cell in self.getCells():
             if cell.getBox() == box_number:
                 box_group.append(cell)
         if len(box_group) != 9:
             raise BaseException("Something broke. Contact a developer ASAP!")
         return box_group
+    
     def markup(self):
-        for cell in self.cells:
+        for cell in self.getCells():
             if cell.getVal() == 'x':
                 cell.setVal(set([1, 2, 3, 4, 5, 6, 7, 8, 9]))
+                
     # There are too many for loops in reduceMarkup, but is there a way to reduce how many we have to use? Can we scan for numbers to be removed in a group while simultaneously remove the numbes that need to be removed from the markedup sets? I'm doubtful
     # I believe the way I have my for loops set up is optimized for more difficult puzzles. If we are dealing with puzzles that give us more numbers to start out with (easier puzzles), then I think the more optimal way would be to scan each group (row, column, box), only make a list of the numbers that need to be removed from that group, then go through again and remove the numbers that need to be removed from the markedup cells. I think the way I do it below is faster for harder puzzles because we have to iterate through fewer total things, even if we have to create an extra list
     def reduceMarkup(self):
@@ -137,10 +145,10 @@ class Matrix(list):
                     if len(cell.getVal().difference(cell.getVal().difference(numbers_to_remove_from_marked_up_cells))) != 0:
                         cell.setVal(cell.getVal().difference(numbers_to_remove_from_marked_up_cells))
                         change_made = True
+        self.checkSolved()
         
     # This step follows from the instructions on page 463 of Crook's paper, reading, "The method proceeds by finding a box that is missing this high-frequency number and determining whether there is one and only one cell into which this number can be entered." If reduceMarkup is called before this, then this method will accomplish what Crook describes here.
     # It is worth noting that this step is, regrettably, for loop intensive
-    # //TODO// add change_made flag to this method
     def forceCells(self):
         change_made = True
         while change_made == True:
@@ -193,6 +201,20 @@ class Matrix(list):
                                 if number_appearance_dict[int(value)] == 8:
                                     self.resolveValue(reference_cell, value)
                                     change_made = True
+        self.checkSolved()
+        
+    def preemptiveSolve(self):
+        change_made = True
+        while change_made == True:
+            change_made = False
+            for box_number in range(1,10,1):
+                for reference_cell in self.getBoxGroup(box_number):
+                    print(self.getBoxGroup(box_number))
+                    print(type(self.getBoxGroup(box_number)))
+                    print(self.getBoxGroup(box_number).remove(reference_cell))
+                    findPreemptivePair(reference_cell, self.getBoxGroup(box_number).remove(reference_cell))
+                    print(reference_cell)
+        self.checkSolved()            
         
     # When a value of a cell is determined, that value should be removed from the column, row, and box that the cell belongs to. For example, if I determine that a 5 belongs in the cell at [7, 2, 7], I must set the value of that cell to '5', but I must also remove 5 from the options for all the other cells in the 7th row, the 2nd column, and the 7th block.
     def resolveValue(self, cell_to_be_value_updated, cell_value):
@@ -209,10 +231,22 @@ class Matrix(list):
             if isinstance(cell.getVal(), set):
                 if cell_value in cell.getVal():
                     cell.getVal().remove(cell_value)
+                    
+    def checkSolved(self):
+        for cell in self.getCells():
+            if isinstance(cell.getVal(), set):
+                return
+            print("SOLVED")
+            print(self)
+            quit()
+            
+            
+    # Write a method to check validity of puzzle inputted
+    
         
     def __str__(self):
         return_str = "-----------------\n"
-        for cell in self.cells:
+        for cell in self.getCells():
             if not isinstance(cell.getVal(), str):
                 return_str = return_str + "x" + " "
             else:
@@ -223,7 +257,7 @@ class Matrix(list):
         return return_str
     def __repr__(self):
         return_str = ""
-        for cell in self.cells:
+        for cell in self.getCells():
             return_str = return_str + cell.getVal() + " "
             if cell.getCol() == 9:
                 return_str = return_str + '\n'
@@ -251,6 +285,9 @@ def openPuzzle():
     matrix = matrix.split()
     return matrix
 
+def findPreemptivePair(cell, group):
+    print(group)
+
 
 puzzle = openPuzzle()
 #print(puzzle)
@@ -267,3 +304,4 @@ my_matrix.reduceMarkup()
 print(my_matrix)
 my_matrix.forceCells()
 print(my_matrix)
+my_matrix.preemptiveSolve()
