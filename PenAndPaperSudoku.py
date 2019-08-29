@@ -337,9 +337,9 @@ class Matrix(list):
         for cell in self.getCells():
             if isinstance(cell.getVal(), set):
                 return
-            print("SOLVED")
-            print(self)
-            quit()
+        print("SOLVED")
+        print(self)
+        quit()
             
             
     # Write a method to check validity of puzzle inputted
@@ -379,7 +379,7 @@ def constructCellList(puzzle):
         
 def openPuzzle():
     matrix = []
-    file = open("C:\\Users\\danielopdahl\\Desktop\\Crooks_Sudoku\\Puzzles\\Sudo_ku.txt", "r")
+    file = open("C:\\Users\\danielopdahl\\Desktop\\Crooks_Sudoku\\Puzzles\\World's Hardest.txt", "r")
     matrix = file.read()
     print("Solving this puzzle \n-----------------")
     print(matrix)
