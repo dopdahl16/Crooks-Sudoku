@@ -230,8 +230,10 @@ class Matrix(list):
                                             if number in cell.getVal():
                                                 cell.getVal().remove(number)
                                                 print(cell.getVal())
+                                                if cell.getVal() == set([1]) or cell.getVal() == set([5]) or cell.getVal() == set([3]):
+                                                    print("STOP")                                                
                                                 if len(cell.getVal()) == 1:
-                                                    cell.setVal(str(cell.getVal().pop()))
+                                                    self.resolveValue(cell, cell.getVal().pop())
                                                     unresolved_cells_row_group.remove(cell)
                                                 change_made = True
             for column_number in range(1,10,1):
@@ -240,6 +242,7 @@ class Matrix(list):
                 for cell in self.getColumnGroup(column_number):
                     if not isinstance(cell.getVal(), str):
                         unresolved_cells_col_group.append(cell)
+                print(self)
                 for union in findNLevelUnions(unresolved_cells_col_group, master_list_of_all_unions):
                     if not len(union) == len(unresolved_cells_col_group):
                         list_of_cells_that_are_subsets_of_union = []
@@ -255,8 +258,10 @@ class Matrix(list):
                                             if number in cell.getVal():
                                                 cell.getVal().remove(number)
                                                 print(cell.getVal())
+                                                if cell.getVal() == set([1]) or cell.getVal() == set([5]) or cell.getVal() == set([3]):
+                                                    print("STOP")                                                
                                                 if len(cell.getVal()) == 1:
-                                                    cell.setVal(str(cell.getVal().pop()))
+                                                    self.resolveValue(cell, cell.getVal().pop())
                                                     unresolved_cells_col_group.remove(cell)
                                                 change_made = True
                                                 
@@ -282,8 +287,10 @@ class Matrix(list):
                                             if number in cell.getVal():
                                                 cell.getVal().remove(number)
                                                 print(cell.getVal())
+                                                if cell.getVal() == set([1]) or cell.getVal() == set([5]) or cell.getVal() == set([3]):
+                                                    print("STOP")
                                                 if len(cell.getVal()) == 1:
-                                                    cell.setVal(str(cell.getVal().pop()))
+                                                    self.resolveValue(cell, cell.getVal().pop())
                                                     unresolved_cells_box_group.remove(cell)
                                                 change_made = True
         print("STOP")
@@ -291,19 +298,29 @@ class Matrix(list):
         
     # When a value of a cell is determined, that value should be removed from the column, row, and box that the cell belongs to. For example, if I determine that a 5 belongs in the cell at [7, 2, 7], I must set the value of that cell to '5', but I must also remove 5 from the options for all the other cells in the 7th row, the 2nd column, and the 7th block.
     def resolveValue(self, cell_to_be_value_updated, cell_value):
+        print("LOOK HERE")
+        print(cell_value)
+        print(type(cell_value))
         cell_to_be_value_updated.setVal(str(cell_value))
         for cell in self.getRowGroup(cell_to_be_value_updated.getRow()):
             if isinstance(cell.getVal(), set):
+                print(cell.getVal())
                 if cell_value in cell.getVal():
                     cell.getVal().remove(cell_value) # probably should use setVal for this... and make it so that you can't modify cells value through a getVal call
+                if len(cell.getVal()) == 1:
+                    self.resolveValue(cell, cell.getVal().pop())
         for cell in self.getColumnGroup(cell_to_be_value_updated.getCol()):
             if isinstance(cell.getVal(), set):
                 if cell_value in cell.getVal():
                     cell.getVal().remove(cell_value)
+                if len(cell.getVal()) == 1:
+                    self.resolveValue(cell, cell.getVal().pop())
         for cell in self.getBoxGroup(cell_to_be_value_updated.getBox()):
             if isinstance(cell.getVal(), set):
                 if cell_value in cell.getVal():
                     cell.getVal().remove(cell_value)
+                if len(cell.getVal()) == 1:
+                    self.resolveValue(cell, cell.getVal().pop())
                     
     def checkSolved(self):
         for cell in self.getCells():
@@ -320,11 +337,11 @@ class Matrix(list):
     def __str__(self):
         return_str = "-----------------\n"
         for cell in self.getCells():
-            #if not isinstance(cell.getVal(), str):
-                #return_str = return_str + "x" + " "
-            #else:
-                #return_str = return_str + str(cell.getVal()) + " "
-            return_str = return_str + str(cell.getVal()) + " "
+            if not isinstance(cell.getVal(), str):
+                return_str = return_str + "x" + " "
+            else:
+                return_str = return_str + str(cell.getVal()) + " "
+            #return_str = return_str + str(cell.getVal()) + " "
             if cell.getCol() == 9:
                 return_str = return_str + '\n'
         return_str = return_str + "-----------------"
