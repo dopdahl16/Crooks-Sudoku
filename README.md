@@ -5,6 +5,9 @@ Unless otherwise explicitly stated in the file, all files in this repository are
 
 Feel free to email me with any questions at dopdahl16@gmail.com. And please contact me if you're able to track down a way to contact Mr.Crook (Dr.Crook?), as I haven't found any sort of email for him.
 
+**Current state of the project:**
+- I've implemented everything in Crook's paper up until the section "A Sudoku Puzzle Whose Solution Requires Random Choice". I hope to next implement Crook's random choice method using vertices and trees. As such, as the project stands right now, the program PenAndPaperSudoku.py cannot solve *every* sudoku puzzle. It can only solve the puzzles that do not require random choice (which is the majority in any case).
+
 ### Development Notes:
 1.
 On page 463, in Crook's paper, he introduces the idea of forced cells, defining them as "a box that is missing [a certain] number and... is [the] one and only cell into which this number can be entered." Essentially, a forced cell is one that we can fill in without the use of preemptive sets, using only the numbers that have been given to us at the start of the puzzle. Interestingly, many easier sudoku puzzles can be solved using only forced cells, without the need of preemptive sets. Sudoku1.txt (printed below) is one such example. Preemptive sets are not needed in order to solve this puzzle. It can be solved completely by the use of forced cells.
