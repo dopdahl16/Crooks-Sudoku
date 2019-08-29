@@ -35,8 +35,10 @@ class Cell:
         return_str = str(cors_val)
         return return_str
 
-# Since I have the coordinates baked into each Cell oject, maybe I should subclass Matrix as a set... Faster lookups? The order that the list provides doesn't really matter...
+# Since I have the coordinates baked into each Cell oject, maybe I should subclass Matrix as a set... Faster lookups? The order that the list provides doesn't really matter... Do I ever have to iterate through a matrix object?
 class Matrix(list):
+    
+    # For the methods resolveValue, preemptiveSolve, reduceMarkup, forceCells, rewrite. Each group goes through the same steps... so just generalize those steps!!!!!
     
     def __init__(self, cells_list=[]):
         self.cells = cells_list
@@ -205,6 +207,7 @@ class Matrix(list):
                                     change_made = True
         self.checkSolved()
         
+    # The below is my implmentation of Crook's algorithm described under the heading "An Algorithm for Solving Sudoku Puzzles" on pages 463 & 464
     def preemptiveSolve(self):
         change_made = True
         while change_made == True:
@@ -348,11 +351,16 @@ class Matrix(list):
     def __str__(self):
         return_str = "-----------------\n"
         for cell in self.getCells():
-            #if not isinstance(cell.getVal(), str):
-                #return_str = return_str + "x" + " "
-            #else:
-                #return_str = return_str + str(cell.getVal()) + " "
-            return_str = return_str + str(cell.getVal()) + " "
+            
+            ### Pretty output:
+            if not isinstance(cell.getVal(), str):
+                return_str = return_str + "x" + " "
+            else:
+                return_str = return_str + str(cell.getVal()) + " "
+            
+            ### Functional output:
+            #return_str = return_str + str(cell.getVal()) + " "
+            
             if cell.getCol() == 9:
                 return_str = return_str + '\n'
         return_str = return_str + "-----------------"
@@ -379,7 +387,14 @@ def constructCellList(puzzle):
         
 def openPuzzle():
     matrix = []
-    file = open("C:\\Users\\danielopdahl\\Desktop\\Crooks_Sudoku\\Puzzles\\World's Hardest.txt", "r")
+    ask_for_input = True
+    while ask_for_input:
+        user_input = input("Please enter the path to a Sudoku puzzle file: ")
+        try:
+            file = open(user_input, "r")
+            ask_for_input = False
+        except IOError:
+            print("No such file name. Please input a valid path and filename.")
     matrix = file.read()
     print("Solving this puzzle \n-----------------")
     print(matrix)
