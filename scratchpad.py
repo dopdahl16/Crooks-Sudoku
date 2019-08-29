@@ -4,6 +4,7 @@ def findNLevelUnions(my_list_of_unresolved_group_cells, master_list_of_all_union
     running_union = set()
     for cell in my_list_of_unresolved_group_cells:
         running_union = running_union.union(cell[3]) # would be cell.getVal() irl instead of cell[3]
+    # This is a hackey way to avoid having to search through the list in a for loop, but I just learned that .index() is O(n) complexity, the same as a loop. Essentially, O(n) searches through the list iteratively, which I could do with a for loop. I should probably change this, but I'm a little salty at myself right now
     val_is_in_list = True
     try:
         master_list_of_all_unions.index(running_union)
