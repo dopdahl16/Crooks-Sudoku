@@ -2,6 +2,8 @@
 # Permission to copy and modify is granted under the GNU General Public License v3.0 license
 # Last revised 8/27/2019
 
+import copy
+
 class Cell:
     def __init__(self, cell_row, cell_col, cell_box, cell_val):
         self.row = cell_row
@@ -208,11 +210,20 @@ class Matrix(list):
         while change_made == True:
             change_made = False
             for box_number in range(1,10,1):
-                unresolved_cells_box_group = set()
+                unresolved_cells_box_group = []
+                master_list_of_all_unions = []
                 for cell in self.getBoxGroup(box_number):
                     if not isinstance(cell.getVal(), str):
-                        unresolved_cells_box_group.add(cell)
-                print(unresolved_cells_box_group)
+                        unresolved_cells_box_group.append(cell)
+                print(findNLevelUnions(unresolved_cells_box_group, master_list_of_all_unions))
+            print("___________")
+            for column_number in range(1,10,1):
+                unresolved_cells_col_group = []
+                master_list_of_all_unions = []
+                for cell in self.getColumnGroup(column_number):
+                    if not isinstance(cell.getVal(), str):
+                        unresolved_cells_col_group.append(cell)
+                print(findNLevelUnions(unresolved_cells_col_group, master_list_of_all_unions))
         self.checkSolved()            
         
     # When a value of a cell is determined, that value should be removed from the column, row, and box that the cell belongs to. For example, if I determine that a 5 belongs in the cell at [7, 2, 7], I must set the value of that cell to '5', but I must also remove 5 from the options for all the other cells in the 7th row, the 2nd column, and the 7th block.
@@ -283,6 +294,28 @@ def openPuzzle():
     print("-----------------")
     matrix = matrix.split()
     return matrix
+
+def findNLevelUnions(my_list_of_unresolved_group_cells, master_list_of_all_unions):
+    running_union = set()
+    for cell in my_list_of_unresolved_group_cells:
+        running_union = running_union.union(cell.getVal())
+    # This is a hackey way to avoid having to search through the list in a for loop, but I just learned that .index() is O(n) complexity, the same as a loop. Essentially, O(n) searches through the list iteratively, which I could do with a for loop. I should probably change this, but I'm a little salty at myself right now
+    val_is_in_list = True
+    try:
+        master_list_of_all_unions.index(running_union)
+    except:
+        val_is_in_list = False
+    if not val_is_in_list:
+        master_list_of_all_unions.append(running_union)
+    for unresolved_cell in my_list_of_unresolved_group_cells:
+        insertion_index = my_list_of_unresolved_group_cells.index(unresolved_cell)
+        my_list_of_unresolved_group_cells.remove(unresolved_cell)
+        working_list = copy.copy(my_list_of_unresolved_group_cells)
+        if len(working_list) == 1:
+            return
+        findNLevelUnions(working_list, master_list_of_all_unions)
+        my_list_of_unresolved_group_cells.insert(insertion_index, unresolved_cell)
+    return master_list_of_all_unions
 
 
 puzzle = openPuzzle()
