@@ -58,3 +58,6 @@ x x 6 7 x 8 2 x x
 x 1 x x 9 x x x 5
 x x x x x 1 x x 8
 ```
+2.
+If you have trouble figuring out how to identify preemptive sets on your own, as I did, you may find it helpful to read [this](http://damienzhang.com/sudoku/) blog post by Damien Zhang, as I did. I employ his observations about preemptive sets in my code.
+> So a way to check whether a set of cells is a preemptive set is to simply calculate the union of the markup of the cells (which gives you the set of numbers that those cells can contain), and then compare the size of that union to the number of cells. If those two quantities are equal, then you have a preemptive set.

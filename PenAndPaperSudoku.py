@@ -208,12 +208,11 @@ class Matrix(list):
         while change_made == True:
             change_made = False
             for box_number in range(1,10,1):
-                for reference_cell in self.getBoxGroup(box_number):
-                    print(self.getBoxGroup(box_number))
-                    print(type(self.getBoxGroup(box_number)))
-                    print(self.getBoxGroup(box_number).remove(reference_cell))
-                    findPreemptivePair(reference_cell, self.getBoxGroup(box_number).remove(reference_cell))
-                    print(reference_cell)
+                unresolved_cells_box_group = set()
+                for cell in self.getBoxGroup(box_number):
+                    if not isinstance(cell.getVal(), str):
+                        unresolved_cells_box_group.add(cell)
+                print(unresolved_cells_box_group)
         self.checkSolved()            
         
     # When a value of a cell is determined, that value should be removed from the column, row, and box that the cell belongs to. For example, if I determine that a 5 belongs in the cell at [7, 2, 7], I must set the value of that cell to '5', but I must also remove 5 from the options for all the other cells in the 7th row, the 2nd column, and the 7th block.
@@ -284,9 +283,6 @@ def openPuzzle():
     print("-----------------")
     matrix = matrix.split()
     return matrix
-
-def findPreemptivePair(cell, group):
-    print(group)
 
 
 puzzle = openPuzzle()
