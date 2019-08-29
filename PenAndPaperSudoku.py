@@ -215,7 +215,10 @@ class Matrix(list):
                 for cell in self.getRowGroup(row_number):
                     if not isinstance(cell.getVal(), str):
                         unresolved_cells_row_group.append(cell)
-                for union in findNLevelUnions(unresolved_cells_row_group, master_list_of_all_unions):
+                master_list_of_all_unions = findNLevelUnions(unresolved_cells_row_group, master_list_of_all_unions)
+                if master_list_of_all_unions == None:
+                    master_list_of_all_unions = []                        
+                for union in master_list_of_all_unions:
                     if not len(union) == len(unresolved_cells_row_group):
                         list_of_cells_that_are_subsets_of_union = []
                         for cell in unresolved_cells_row_group:
@@ -229,12 +232,15 @@ class Matrix(list):
                                         if cell in list_of_cells_that_are_NOT_subsets_of_union:
                                             if number in cell.getVal():
                                                 cell.getVal().remove(number)
-                                                print(cell.getVal())
-                                                if cell.getVal() == set([1]) or cell.getVal() == set([5]) or cell.getVal() == set([3]):
-                                                    print("STOP")                                                
                                                 if len(cell.getVal()) == 1:
                                                     self.resolveValue(cell, cell.getVal().pop())
-                                                    unresolved_cells_row_group.remove(cell)
+                                                    cells_to_be_removed = []
+                                                    for unresolved_cell in unresolved_cells_row_group:
+                                                        if len(unresolved_cell.getVal()) == 1:                                                       
+                                                            cells_to_be_removed.append(unresolved_cell)
+                                                    for cell_to_be_removed in cells_to_be_removed:
+                                                        if cell_to_be_removed in unresolved_cells_row_group:
+                                                            unresolved_cells_row_group.remove(cell_to_be_removed)                                                    
                                                 change_made = True
             for column_number in range(1,10,1):
                 unresolved_cells_col_group = []
@@ -242,8 +248,10 @@ class Matrix(list):
                 for cell in self.getColumnGroup(column_number):
                     if not isinstance(cell.getVal(), str):
                         unresolved_cells_col_group.append(cell)
-                print(self)
-                for union in findNLevelUnions(unresolved_cells_col_group, master_list_of_all_unions):
+                master_list_of_all_unions = findNLevelUnions(unresolved_cells_col_group, master_list_of_all_unions)
+                if master_list_of_all_unions == None:
+                    master_list_of_all_unions = []
+                for union in master_list_of_all_unions:
                     if not len(union) == len(unresolved_cells_col_group):
                         list_of_cells_that_are_subsets_of_union = []
                         for cell in unresolved_cells_col_group:
@@ -256,13 +264,16 @@ class Matrix(list):
                                     if isinstance(cell.getVal(), set):
                                         if cell in list_of_cells_that_are_NOT_subsets_of_union:
                                             if number in cell.getVal():
-                                                cell.getVal().remove(number)
-                                                print(cell.getVal())
-                                                if cell.getVal() == set([1]) or cell.getVal() == set([5]) or cell.getVal() == set([3]):
-                                                    print("STOP")                                                
+                                                cell.getVal().remove(number)                                             
                                                 if len(cell.getVal()) == 1:
                                                     self.resolveValue(cell, cell.getVal().pop())
-                                                    unresolved_cells_col_group.remove(cell)
+                                                    cells_to_be_removed = []
+                                                    for unresolved_cell in unresolved_cells_col_group:
+                                                        if len(unresolved_cell.getVal()) == 1:                                                       
+                                                            cells_to_be_removed.append(unresolved_cell)
+                                                    for cell_to_be_removed in cells_to_be_removed:
+                                                        if cell_to_be_removed in unresolved_cells_col_group:
+                                                            unresolved_cells_col_group.remove(cell_to_be_removed)
                                                 change_made = True
                                                 
             for box_number in range(1,10,1):
@@ -270,9 +281,11 @@ class Matrix(list):
                 master_list_of_all_unions = []
                 for cell in self.getBoxGroup(box_number):
                     if not isinstance(cell.getVal(), str):
-                        print(cell.getVal())
                         unresolved_cells_box_group.append(cell)
-                for union in findNLevelUnions(unresolved_cells_box_group, master_list_of_all_unions):
+                master_list_of_all_unions = findNLevelUnions(unresolved_cells_box_group, master_list_of_all_unions)
+                if master_list_of_all_unions == None:
+                    master_list_of_all_unions = []                        
+                for union in master_list_of_all_unions:
                     if not len(union) == len(unresolved_cells_box_group):
                         list_of_cells_that_are_subsets_of_union = []
                         for cell in unresolved_cells_box_group:
@@ -286,25 +299,23 @@ class Matrix(list):
                                         if cell in list_of_cells_that_are_NOT_subsets_of_union:
                                             if number in cell.getVal():
                                                 cell.getVal().remove(number)
-                                                print(cell.getVal())
-                                                if cell.getVal() == set([1]) or cell.getVal() == set([5]) or cell.getVal() == set([3]):
-                                                    print("STOP")
                                                 if len(cell.getVal()) == 1:
                                                     self.resolveValue(cell, cell.getVal().pop())
-                                                    unresolved_cells_box_group.remove(cell)
+                                                    cells_to_be_removed = []
+                                                    for unresolved_cell in unresolved_cells_box_group:
+                                                        if len(unresolved_cell.getVal()) == 1:                                                       
+                                                            cells_to_be_removed.append(unresolved_cell)
+                                                    for cell_to_be_removed in cells_to_be_removed:
+                                                        if cell_to_be_removed in unresolved_cells_box_group:
+                                                            unresolved_cells_box_group.remove(cell_to_be_removed)
                                                 change_made = True
-        print("STOP")
         self.checkSolved()            
         
     # When a value of a cell is determined, that value should be removed from the column, row, and box that the cell belongs to. For example, if I determine that a 5 belongs in the cell at [7, 2, 7], I must set the value of that cell to '5', but I must also remove 5 from the options for all the other cells in the 7th row, the 2nd column, and the 7th block.
     def resolveValue(self, cell_to_be_value_updated, cell_value):
-        print("LOOK HERE")
-        print(cell_value)
-        print(type(cell_value))
         cell_to_be_value_updated.setVal(str(cell_value))
         for cell in self.getRowGroup(cell_to_be_value_updated.getRow()):
             if isinstance(cell.getVal(), set):
-                print(cell.getVal())
                 if cell_value in cell.getVal():
                     cell.getVal().remove(cell_value) # probably should use setVal for this... and make it so that you can't modify cells value through a getVal call
                 if len(cell.getVal()) == 1:
@@ -400,19 +411,13 @@ def findNLevelUnions(my_list_of_unresolved_group_cells, master_list_of_all_union
 
 
 puzzle = openPuzzle()
-#print(puzzle)
 ordered_cell_list = constructCellList(puzzle)
-#print(ordered_cell_list)
 my_matrix = Matrix()
 my_matrix.setCells(ordered_cell_list)
-#print(str(my_matrix))
 
 # If I were staying absolutely true to Crook's algorithm, I would call a function here called forceBoxes. This initial step is described on page 463 in his paper. The specific paragraph in which he describes this step beings, "One should always begin the solution of a Sudoku puzzle by looking for cells within boxes to enter numbers within that box that are missing." While on actual pen and paper, this may be the more efficient manner of doing things, I believe that doing this initial step in a computer algorithm can be better accomplished by first marking up the entire matrix, then doing an initial "hunt" for boxes that can be forced. This is the approach I go with in my algorithm.
 
 my_matrix.markup()
 my_matrix.reduceMarkup()
-print(my_matrix)
 my_matrix.forceCells()
-print(my_matrix)
 my_matrix.preemptiveSolve()
-print(my_matrix)
