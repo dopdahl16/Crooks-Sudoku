@@ -337,11 +337,11 @@ class Matrix(list):
     def __str__(self):
         return_str = "-----------------\n"
         for cell in self.getCells():
-            if not isinstance(cell.getVal(), str):
-                return_str = return_str + "x" + " "
-            else:
-                return_str = return_str + str(cell.getVal()) + " "
-            #return_str = return_str + str(cell.getVal()) + " "
+            #if not isinstance(cell.getVal(), str):
+                #return_str = return_str + "x" + " "
+            #else:
+                #return_str = return_str + str(cell.getVal()) + " "
+            return_str = return_str + str(cell.getVal()) + " "
             if cell.getCol() == 9:
                 return_str = return_str + '\n'
         return_str = return_str + "-----------------"
