@@ -1,6 +1,10 @@
 # Copyright (C) 2019 Daniel Opdahl (dopdahl16@gmail.com) Some Rights Reserved. 
 # Permission to copy and modify is granted under the GNU General Public License v3.0 license
-# Last revised 8/27/2019
+# Last revised 10/7/2019
+
+# TODO: Use f-string for output
+# TODO: Implement solving for puzzles that require random choice. Essentially, finish the project!
+# TODO: Tell someone you love that you love them today :) 
 
 import copy
 
@@ -429,9 +433,6 @@ puzzle = openPuzzle()
 ordered_cell_list = constructCellList(puzzle)
 my_matrix = Matrix()
 my_matrix.setCells(ordered_cell_list)
-
-# If I were staying absolutely true to Crook's algorithm, I would call a function here called forceBoxes. This initial step is described on page 463 in his paper. The specific paragraph in which he describes this step beings, "One should always begin the solution of a Sudoku puzzle by looking for cells within boxes to enter numbers within that box that are missing." While on actual pen and paper, this may be the more efficient manner of doing things, I believe that doing this initial step in a computer algorithm can be better accomplished by first marking up the entire matrix, then doing an initial "hunt" for boxes that can be forced. This is the approach I go with in my algorithm.
-
 my_matrix.markup()
 my_matrix.reduceMarkup()
 my_matrix.forceCells()
