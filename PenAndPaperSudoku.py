@@ -4,6 +4,7 @@
 
 # TODO: Use f-string for output
 # TODO: Implement solving for puzzles that require random choice. Essentially, finish the project!
+# TODO: Write a method to check validity of puzzle inputted
 # TODO: Tell someone you love that you love them today :) 
 
 import copy
@@ -347,11 +348,7 @@ class Matrix(list):
         print("SOLVED")
         print(self)
         quit()
-            
-            
-    # Write a method to check validity of puzzle inputted
-    
-        
+
     def __str__(self):
         return_str = "-----------------\n"
         for cell in self.getCells():
@@ -369,6 +366,7 @@ class Matrix(list):
                 return_str = return_str + '\n'
         return_str = return_str + "-----------------"
         return return_str
+
     def __repr__(self):
         return_str = ""
         for cell in self.getCells():
@@ -410,7 +408,6 @@ def findNLevelUnions(my_list_of_unresolved_group_cells, master_list_of_all_union
     running_union = set()
     for cell in my_list_of_unresolved_group_cells:
         running_union = running_union.union(cell.getVal())
-    # This is a hackey way to avoid having to search through the list in a for loop, but I just learned that .index() is O(n) complexity, the same as a loop. Essentially, O(n) searches through the list iteratively, which I could do with a for loop. I should probably change this, but I'm a little salty at myself right now
     val_is_in_list = True
     try:
         master_list_of_all_unions.index(running_union)
