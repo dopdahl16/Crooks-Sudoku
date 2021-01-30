@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Flask Template Example</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
+</head>
+
+<body>
+    <div>
+        
+    </div>
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+    <div class="puzzle-input">
+        <h1>Please input a puzzle below:</h1>
+        <form>
+            <div class="box">
+                <input id="a1" type="text" size="1">
+                <input id="a2" type="text" size="1">
+                <input id="a3" type="text" size="1">
+                <input id="a4" type="text" size="1">
+                <input id="a5" type="text" size="1">
+                <input id="a6" type="text" size="1">
+                <input id="a7" type="text" size="1">
+                <input id="a8" type="text" size="1">
+                <input id="a9" type="text" size="1">
+            </div>
+            <div class="box">
+                <input id="b1" type="text" size="1">
+                <input id="b2" type="text" size="1">
+                <input id="b3" type="text" size="1">
+                <input id="b4" type="text" size="1">
+                <input id="b5" type="text" size="1">
+                <input id="b6" type="text" size="1">
+                <input id="b7" type="text" size="1">
+                <input id="b8" type="text" size="1">
+                <input id="b9" type="text" size="1">
+            </div>
+            <div class="box">
+                <input id="c1" type="text" size="1">
+                <input id="c2" type="text" size="1">
+                <input id="c3" type="text" size="1">
+                <input id="c4" type="text" size="1">
+                <input id="c5" type="text" size="1">
+                <input id="c6" type="text" size="1">
+                <input id="c7" type="text" size="1">
+                <input id="c8" type="text" size="1">
+                <input id="c9" type="text" size="1">
+            </div>
+            <div class="box">
+                <input id="d1" type="text" size="1">
+                <input id="d2" type="text" size="1">
+                <input id="d3" type="text" size="1">
+                <input id="d4" type="text" size="1">
+                <input id="d5" type="text" size="1">
+                <input id="d6" type="text" size="1">
+                <input id="d7" type="text" size="1">
+                <input id="d8" type="text" size="1">
+                <input id="d9" type="text" size="1">
+            </div>
+            <div class="box">
+                <input id="e1" type="text" size="1">
+                <input id="e2" type="text" size="1">
+                <input id="e3" type="text" size="1">
+                <input id="e4" type="text" size="1">
+                <input id="e5" type="text" size="1">
+                <input id="e6" type="text" size="1">
+                <input id="e7" type="text" size="1">
+                <input id="e8" type="text" size="1">
+                <input id="e9" type="text" size="1">
+            </div>
+            <div class="box">
+                <input id="f1" type="text" size="1">
+                <input id="f2" type="text" size="1">
+                <input id="f3" type="text" size="1">
+                <input id="f4" type="text" size="1">
+                <input id="f5" type="text" size="1">
+                <input id="f6" type="text" size="1">
+                <input id="f7" type="text" size="1">
+                <input id="f8" type="text" size="1">
+                <input id="f9" type="text" size="1">
+            </div>
+            <div class="box">
+                <input id="g1" type="text" size="1">
+                <input id="g2" type="text" size="1">
+                <input id="g3" type="text" size="1">
+                <input id="g4" type="text" size="1">
+                <input id="g5" type="text" size="1">
+                <input id="g6" type="text" size="1">
+                <input id="g7" type="text" size="1">
+                <input id="g8" type="text" size="1">
+                <input id="g9" type="text" size="1">
+            </div>
+            <div class="box">
+                <input id="h1" type="text" size="1">
+                <input id="h2" type="text" size="1">
+                <input id="h3" type="text" size="1">
+                <input id="h4" type="text" size="1">
+                <input id="h5" type="text" size="1">
+                <input id="h6" type="text" size="1">
+                <input id="h7" type="text" size="1">
+                <input id="h8" type="text" size="1">
+                <input id="h9" type="text" size="1">
+            </div>
+            <div class="box">
+                <input id="i1" type="text" size="1">
+                <input id="i2" type="text" size="1">
+                <input id="i3" type="text" size="1">
+                <input id="i4" type="text" size="1">
+                <input id="i5" type="text" size="1">
+                <input id="i6" type="text" size="1">
+                <input id="i7" type="text" size="1">
+                <input id="i8" type="text" size="1">
+                <input id="i9" type="text" size="1">
+            </div>
+            <br>
+            <input id="submit-puzzle" type="submit" value="Submit">
+        </form>
+    </div>
+    <div class="puzzle-output">
+        <div class="box">
+            <p id="a1"></p>
+            <p id="a2"></p>
+            <p id="a3"></p>
+            <p id="a4"></p>
+            <p id="a5"></p>
+            <p id="a6"></p>
+            <p id="a7"></p>
+            <p id="a8"></p>
+            <p id="a9"></p>
+        </div>
+        <div class="box">
+            <p id="b1"></p>
+            <p id="b2"></p>
+            <p id="b3"></p>
+            <p id="b4"></p>
+            <p id="b5"></p>
+            <p id="b6"></p>
+            <p id="b7"></p>
+            <p id="b8"></p>
+            <p id="b9"></p>
+        </div>
+        <div class="box">
+            <p id="c1"></p>
+            <p id="c2"></p>
+            <p id="c3"></p>
+            <p id="c4"></p>
+            <p id="c5"></p>
+            <p id="c6"></p>
+            <p id="c7"></p>
+            <p id="c8"></p>
+            <p id="c9"></p>
+        </div>
+        <div class="box">
+            <p id="d1"></p>
+            <p id="d2"></p>
+            <p id="d3"></p>
+            <p id="d4"></p>
+            <p id="d5"></p>
+            <p id="d6"></p>
+            <p id="d7"></p>
+            <p id="d8"></p>
+            <p id="d9"></p>
+        </div>
+        <div class="box">
+            <p id="e1"></p>
+            <p id="e2"></p>
+            <p id="e3"></p>
+            <p id="e4"></p>
+            <p id="e5"></p>
+            <p id="e6"></p>
+            <p id="e7"></p>
+            <p id="e8"></p>
+            <p id="e9"></p>
+        </div>
+        <div class="box">
+            <p id="f1"></p>
+            <p id="f2"></p>
+            <p id="f3"></p>
+            <p id="f4"></p>
+            <p id="f5"></p>
+            <p id="f6"></p>
+            <p id="f7"></p>
+            <p id="f8"></p>
+            <p id="f9"></p>
+        </div>
+        <div class="box">
+            <p id="g1"></p>
+            <p id="g2"></p>
+            <p id="g3"></p>
+            <p id="g4"></p>
+            <p id="g5"></p>
+            <p id="g6"></p>
+            <p id="g7"></p>
+            <p id="g8"></p>
+            <p id="g9"></p>
+        </div>
+        <div class="box">
+            <p id="h1"></p>
+            <p id="h2"></p>
+            <p id="h3"></p>
+            <p id="h4"></p>
+            <p id="h5"></p>
+            <p id="h6"></p>
+            <p id="h7"></p>
+            <p id="h8"></p>
+            <p id="h9"></p>
+        </div>
+        <div class="box">
+            <p id="i1"></p>
+            <p id="i2"></p>
+            <p id="i3"></p>
+            <p id="i4"></p>
+            <p id="i5"></p>
+            <p id="i6"></p>
+            <p id="i7"></p>
+            <p id="i8"></p>
+            <p id="i9"></p>
+        </divi>
+    </divi>
+</body>
+
+</html>

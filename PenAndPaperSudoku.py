@@ -387,23 +387,6 @@ def constructCellList(puzzle):
         cell_count += 1
     return ordered_cell_list
         
-def openPuzzle():
-    matrix = []
-    ask_for_input = True
-    while ask_for_input:
-        user_input = input("Please enter the path to a Sudoku puzzle file: ")
-        try:
-            file = open(user_input, "r")
-            ask_for_input = False
-        except IOError:
-            print("No such file name. Please input a valid path and filename.")
-    matrix = file.read()
-    print("Solving this puzzle \n-----------------")
-    print(matrix)
-    print("-----------------")
-    matrix = matrix.split()
-    return matrix
-
 def findNLevelUnions(my_list_of_unresolved_group_cells, master_list_of_all_unions):
     running_union = set()
     for cell in my_list_of_unresolved_group_cells:
@@ -425,12 +408,43 @@ def findNLevelUnions(my_list_of_unresolved_group_cells, master_list_of_all_union
         my_list_of_unresolved_group_cells.insert(insertion_index, unresolved_cell)
     return master_list_of_all_unions
 
+def userInputOpenPuzzle():
+    matrix = []
+    ask_for_input = True
+    while ask_for_input:
+        user_input = input("Please enter the path to a Sudoku puzzle file: ")
+        try:
+            file = open(user_input, "r")
+            ask_for_input = False
+        except IOError:
+            print("No such file name. Please input a valid path and filename.")
+    matrix = file.read()
+    print("Solving this puzzle \n-----------------")
+    print(matrix)
+    print("-----------------")
+    matrix = matrix.split()
+    return matrix
 
-puzzle = openPuzzle()
-ordered_cell_list = constructCellList(puzzle)
-my_matrix = Matrix()
-my_matrix.setCells(ordered_cell_list)
-my_matrix.markup()
-my_matrix.reduceMarkup()
-my_matrix.forceCells()
-my_matrix.preemptiveSolve()
+def autoOpenPuzzle(puzzle_string):
+    matrix = puzzle_string
+    print("Solving this puzzle \n-----------------")
+    print(matrix)
+    print("-----------------")
+    matrix = matrix.split()
+    return matrix
+
+def solvePuzzle(puzzle=None):
+    if puzzle:
+        matrix = autoOpenPuzzle(puzzle)
+    else:
+        matrix = userInputOpenPuzzle()
+    ordered_cell_list = constructCellList(matrix)
+    my_matrix = Matrix()
+    my_matrix.setCells(ordered_cell_list)
+    my_matrix.markup()
+    my_matrix.reduceMarkup()
+    my_matrix.forceCells()
+    my_matrix.preemptiveSolve()
+
+if __name__ == "__main__":
+    solvePuzzle()

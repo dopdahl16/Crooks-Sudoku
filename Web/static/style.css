@@ -1,0 +1,45 @@
+.puzzle-input {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+}
+.puzzle-output {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+    max-width: 500px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    background-color: black;
+    border-color: black;
+    border-style: solid;
+}
+form {
+    max-width: 500px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    background-color: black;
+    border-color: black;
+    border-style: solid;
+}
+.box {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    background-color: white;
+    justify-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+input {
+    max-width: 20px;
+}
+* {
+    background-color: white;
+}
+#submit-puzzle {
+    max-width: 100px !important;
+    justify-self: center;
+}
