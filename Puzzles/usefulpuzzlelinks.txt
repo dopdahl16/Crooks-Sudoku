@@ -1,0 +1,3 @@
+https://pi.math.cornell.edu/~mec/Summer2009/meerkamp/Site/Solving_any_Sudoku_II.html
+https://d2s2u1f3ozn8hj.cloudfront.net/sudoku/sfiles/KD_Sudoku_ST_8_v1.pdf
+https://projecteuler.net/project/resources/p096_sudoku.txt
