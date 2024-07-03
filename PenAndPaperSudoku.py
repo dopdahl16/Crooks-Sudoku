@@ -1,9 +1,7 @@
 # Copyright (C) 2024 Daniel Opdahl (daniel@danielopdahl.com) Some Rights Reserved. 
 # Permission to copy and modify is granted under the GNU General Public License v3.0 license
-# Last revised 6/7/2024
+# Last revised 7/3/2024
 
-# TODO: Use f-string for output
-# TODO: Implement solving for puzzles that require random choice. Essentially, finish the project!
 # TODO: Tell someone you love that you love them today :) 
 
 import copy
@@ -40,8 +38,7 @@ class Cell:
         return return_str
 
 class Matrix(list):
-    
-    # For the methods resolveValue, preemptiveSolve, reduceMarkup, forceCells, rewrite. Each group goes through the same steps... so just generalize those steps!!!!!
+    # It would be possible to generalize the methods reduceMarkup, forceCells, findPreemptiveSets into one method. However, I think the readability and clarity of having those distinct functions call helper functions (reduceGroupMarkup forceCellsInGroup findPreemptiveSetsInGroup) is well worth the extra few kilobytes. This note is only here to satisfy the pedants and acknowledge that yes, I do notice the redundancy. It is intentional.
 
     def __init__(self, cells_list=[]):
         self.cells = cells_list
@@ -117,7 +114,6 @@ class Matrix(list):
             change_made = False
             for getter_function in getter_functions:
                 prior_state = list(self.getCellsSnapshot())
-                # print(self)
                 for subset_number in range(1,10,1):
                     self.reduceGroupMarkup(getter_function, subset_number)
                     if prior_state != list(self.getCellsSnapshot()):
@@ -129,15 +125,13 @@ class Matrix(list):
         getter_functions = [self.getRowGroup, self.getColumnGroup, self.getBoxGroup]
         while change_made == True:
             change_made = False
-            self.reduceMarkup()
-            print(self)
             for getter_function in getter_functions:
                 prior_state = list(self.getCellsSnapshot())
-                print(self)
                 for subset_number in range(1,10,1):
                     self.forceCellsInGroup(getter_function, subset_number)
                     if prior_state != list(self.getCellsSnapshot()):
                         change_made = True
+                        self.reduceMarkup()
 
     def findPreemptiveSets(self):
         change_made = True
@@ -146,29 +140,28 @@ class Matrix(list):
             change_made = False
             for getter_function in getter_functions:
                 prior_state = list(self.getCellsSnapshot())
-                print(self)
                 for subset_number in range(1,10,1):
                     self.findPreemptiveSetsInGroup(getter_function, subset_number)
                     if prior_state != list(self.getCellsSnapshot()):
                         change_made = True
 
     def reduceGroupMarkup(self, getFunction, subset_number):
-            numbers_to_remove_from_marked_up_cells = set()
-            marked_up_cells = []
-            for cell in getFunction(subset_number):
-                if isinstance(cell.getVal(), str):
+        numbers_to_remove_from_marked_up_cells = set()
+        marked_up_cells = []
+        for cell in getFunction(subset_number):
+            if isinstance(cell.getVal(), str):
+                numbers_to_remove_from_marked_up_cells.add(int(cell.getVal()))
+            elif isinstance(cell.getVal(), set):
+                if len(cell.getVal()) == 1:
+                    cell.setVal(str(cell.getVal().pop()))
                     numbers_to_remove_from_marked_up_cells.add(int(cell.getVal()))
-                elif isinstance(cell.getVal(), set):
-                    if len(cell.getVal()) == 1:
-                        cell.setVal(str(cell.getVal().pop()))
-                        numbers_to_remove_from_marked_up_cells.add(int(cell.getVal()))
-                    else:
-                        marked_up_cells.append(cell)
                 else:
-                    raise BaseException("Something broke. Contact a developer ASAP!")
-            for cell in marked_up_cells:
-                if len(cell.getVal().difference(cell.getVal().difference(numbers_to_remove_from_marked_up_cells))) != 0:
-                    cell.setVal(cell.getVal().difference(numbers_to_remove_from_marked_up_cells))
+                    marked_up_cells.append(cell)
+            else:
+                raise BaseException("Invalid type in cell value")
+        for cell in marked_up_cells:
+            if len(cell.getVal().difference(cell.getVal().difference(numbers_to_remove_from_marked_up_cells))) != 0:
+                cell.setVal(cell.getVal().difference(numbers_to_remove_from_marked_up_cells))
 
     def forceCellsInGroup(self, getFunction, subset_number):
         number_appearance_dict = {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}
@@ -201,7 +194,6 @@ class Matrix(list):
 
     def resolveValue(self, cell_to_be_updated, cell_value):
         cell_to_be_updated.setVal(str(cell_value))
-        print(self)
         group_getter_functions = [self.getRowGroup, self.getColumnGroup, self.getBoxGroup]
         cell_getter_functions = [cell_to_be_updated.getRow, cell_to_be_updated.getCol, cell_to_be_updated.getBox]
         for getter_function_index in range(len(group_getter_functions)):
@@ -229,8 +221,7 @@ class Matrix(list):
         if self.checkFilled() == False:
             return
         if self.checkValidSolution() == False:
-            print("Invalid Solution. Something went wrong.")
-            quit()
+            return
         print("SOLVED")
         print(self)
         quit()
@@ -253,6 +244,18 @@ class Matrix(list):
                 if len(subset) != len(set(subset)):
                     return False
         return True
+    
+    def checkViolation(self):
+        getter_functions = [self.getRowGroup, self.getColumnGroup, self.getBoxGroup]
+        for getter_function in getter_functions:
+            for subset_number in range(1,10,1):
+                subset = []
+                for cell in getter_function(subset_number):
+                    if cell.getVal() in ['1','2','3','4','5','6','7','8','9']:
+                        subset.append(cell.getVal())
+                if len(subset) != len(set(subset)):
+                    return True
+        return False
 
     def checkValidPuzzle(self):
         getter_functions = [self.getRowGroup, self.getColumnGroup, self.getBoxGroup]
@@ -267,6 +270,40 @@ class Matrix(list):
                 if len(list(filter(('x').__ne__, subset))) != len(set(list(filter(('x').__ne__, subset)))):
                     print("Invalid Puzzle: duplicate number in a row, column, or box")
                     quit()
+        return
+
+    def guess(self):
+        smallest_markup_cell = Cell(0, 0, 0, {1,2,3,4,5,6,7,8,9,10})
+        for cell in self.getCells():
+            if isinstance(cell.getVal(), set) and len(cell.getVal()) < len(smallest_markup_cell.getVal()):
+                smallest_markup_cell = cell
+        index_of_smallest_markup_cell = self.getCells().index(smallest_markup_cell)
+        for guess in smallest_markup_cell.getVal():
+            possible_smallest_markup_cell = copy.deepcopy(smallest_markup_cell)
+            possible_smallest_markup_cell.setVal(str(guess))
+            possible_cell_list = copy.deepcopy(self.getCells())
+            possible_cell_list[index_of_smallest_markup_cell] = possible_smallest_markup_cell
+            possible_matrix = copy.deepcopy(self)
+            possible_matrix.setCells(possible_cell_list)
+            while True:
+                puzzle_state = list(possible_matrix.getCellsSnapshot())
+                possible_matrix.reduceMarkup()
+                if possible_matrix.checkViolation() == True:
+                    break
+                possible_matrix.checkSolved()
+                possible_matrix.forceCells()
+                if possible_matrix.checkViolation() == True:
+                    break
+                possible_matrix.reduceMarkup()
+                if possible_matrix.checkViolation() == True:
+                    break
+                possible_matrix.checkSolved()
+                possible_matrix.findPreemptiveSets()
+                if possible_matrix.checkViolation() == True:
+                    break
+                if puzzle_state == list(possible_matrix.getCellsSnapshot()):
+                    possible_matrix.guess()
+                    break
         return
 
 
@@ -286,8 +323,7 @@ def openPuzzle():
     ask_for_input = True
     while ask_for_input:
         # user_input = input("Please enter the path to a Sudoku puzzle file: ")
-        user_input = "Puzzles/grid2.txt"
-        # user_input = "Puzzles/Sudoku1.txt"
+        user_input = "Puzzles/Sudoku1.txt"
         try:
             file = open(user_input, "r")
             ask_for_input = False
@@ -303,8 +339,6 @@ def openPuzzle():
             matrix += "\n"
         else:
             matrix += " "
-
-
     print("Solving this puzzle \n-------------------")
     print(matrix)
     print("-------------------")
@@ -318,23 +352,13 @@ my_matrix = Matrix()
 my_matrix.setCells(ordered_cell_list)
 my_matrix.checkValidPuzzle()
 my_matrix.markup()
-guessing_needed = False
-while guessing_needed == False:
+while True:
     puzzle_state = list(my_matrix.getCellsSnapshot())
     my_matrix.reduceMarkup()
-    my_matrix.checkValidSolution()
-    my_matrix.forceCells()
-    my_matrix.checkValidSolution()
-    my_matrix.findPreemptiveSets()
-    my_matrix.checkValidSolution()
-    my_matrix.reduceMarkup()
-    my_matrix.checkValidSolution()
-    my_matrix.forceCells()
-    my_matrix.checkValidSolution()
-    my_matrix.findPreemptiveSets()
-    my_matrix.checkValidSolution()
     my_matrix.checkSolved()
-    if puzzle_state != list(my_matrix.getCellsSnapshot()):
-        guessing_needed == True
-print("FUCK")
-# Guessing code here
+    my_matrix.forceCells()
+    my_matrix.reduceMarkup()
+    my_matrix.checkSolved()
+    my_matrix.findPreemptiveSets()
+    if puzzle_state == list(my_matrix.getCellsSnapshot()):
+        my_matrix.guess()
